@@ -54,7 +54,7 @@ def hdfs_files(path):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('stage',choices=['ready','banned','data','recommendations','absent','present','metrics','alerts','topology'])
-    p.add_argument('--product',default='p001');p.add_argument('--status',default='firing');args=p.parse_args()
+    p.add_argument('--since',type=float,default=0);p.add_argument('--product',default='p001');p.add_argument('--status',default='firing');args=p.parse_args()
     if args.stage=='ready':
         wait('PostgreSQL',lambda:sql('SELECT 1'))
         wait('Kafka Streams RUNNING',lambda:requests.get('http://filter:8090/health',timeout=5).status_code==200)
@@ -100,7 +100,7 @@ def main():
         def alerts():
             path=Path('/evidence/alerts.jsonl')
             if not path.exists():return False
-            return any(a.get('status')==args.status and a['labels'].get('alertname')=='KafkaBrokerDown' and a['labels'].get('instance')=='primary-3:7071' for line in path.read_text().splitlines() for a in json.loads(line).get('payload',{}).get('alerts',[]))
+            return any(a.get('status')==args.status and a['labels'].get('alertname')=='KafkaBrokerDown' and a['labels'].get('instance')=='primary-3:7071' for line in path.read_text().splitlines() if json.loads(line).get('received_at',0)>=args.since for a in json.loads(line).get('payload',{}).get('alerts',[]))
         wait('Alertmanager delivered '+args.status,alerts)
     elif args.stage=='topology':
         evidence={}

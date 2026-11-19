@@ -14,15 +14,16 @@ docker compose run --rm moderator services.cli ban remove p001
 docker compose run --rm verify present --product p001
 # Always restart the broker, including an interrupted or failed check.
 trap 'docker compose start primary-3 >/dev/null' EXIT
+since=$(date +%s)
 docker compose stop primary-3
-docker compose run --rm verify alerts --status firing
+docker compose run --rm verify alerts --status firing --since "$since"
 docker compose run --rm shop
 docker compose start primary-3
 docker compose run --rm verify metrics
-docker compose run --rm verify alerts --status resolved
+docker compose run --rm verify alerts --status resolved --since "$since"
 trap - EXIT
 for cluster in primary secondary; do
-  docker compose exec -T "$cluster-1" /opt/kafka/bin/kafka-topics.sh --bootstrap-server "$cluster-1:9092" --command-config /certs/client.properties --describe > "evidence/$cluster-topics.txt"
+  docker compose exec -T -e KAFKA_OPTS= "$cluster-1" /opt/kafka/bin/kafka-topics.sh --bootstrap-server "$cluster-1:9092" --command-config /certs/client.properties --describe > "evidence/$cluster-topics.txt"
 done
 docker compose logs --no-color filter mirror connect lake outbox catalog rec-reader > evidence/services.log
 docker compose ps > evidence/services.txt

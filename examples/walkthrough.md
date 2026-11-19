@@ -18,7 +18,7 @@ docker compose exec -T connect cat /debug/products.jsonl
 Посмотреть реплицированный топик (команда завершится по таймауту; код timeout не является ошибкой доставки):
 
 ```bash
-docker compose exec -T secondary-1 /opt/kafka/bin/kafka-console-consumer.sh \
+docker compose exec -T -e KAFKA_OPTS= secondary-1 /opt/kafka/bin/kafka-console-consumer.sh \
   --bootstrap-server secondary-1:9092 --consumer.config /certs/client.properties \
   --topic primary.products.filtered --from-beginning --timeout-ms 10000 \
   --property print.key=true

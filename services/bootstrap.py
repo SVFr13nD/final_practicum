@@ -3,7 +3,7 @@ from confluent_kafka.admin import AdminClient, NewTopic, AclBinding, ResourceTyp
 from .common import config
 
 def acl(role,kind,name,operations,prefix=False):
-    return [AclBinding(getattr(ResourceType,kind),name,
+    return [AclBinding(getattr(ResourceType,'BROKER' if kind=='CLUSTER' else kind),name,
         ResourcePatternType.PREFIXED if prefix else ResourcePatternType.LITERAL,
         'User:'+role,'*',getattr(AclOperation,op),AclPermissionType.ALLOW) for op in operations]
 

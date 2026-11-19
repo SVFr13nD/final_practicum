@@ -64,7 +64,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-1:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-1:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -126,7 +126,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-2:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-2:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -188,7 +188,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-3:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server primary-3:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -250,7 +250,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-1:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-1:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -312,7 +312,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-2:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-2:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -374,7 +374,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-3:9092
+      - KAFKA_OPTS= /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server secondary-3:9092
         --command-config /certs/client.properties >/dev/null 2>&1
       interval: 20s
       timeout: 15s
@@ -614,7 +614,6 @@ services:
     profiles:
     - tools
     environment:
-      SPARK_LOCAL_IP: analytics
       PYTHONUNBUFFERED: '1'
   prometheus:
     image: prom/prometheus:v3.2.1
