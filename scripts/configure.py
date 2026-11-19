@@ -29,6 +29,7 @@ def main():
             run('keytool','-importcert','-noprompt','-alias','ca','-file',str(d/'ca.crt'),'-keystore',str(d/'truststore.p12'),'-storetype','PKCS12','-storepass','changeit')
             (d/'request.csr').unlink(); (d/'extensions').unlink()
         write(d/'client.properties',java_ssl(role))
+        write(d/'password','changeit')
         for f in d.iterdir(): os.chmod(f,0o644)
     # Root-only CA key; runtime containers receive only their own identity.
     os.chmod(ca/'ca.key',0o600)
